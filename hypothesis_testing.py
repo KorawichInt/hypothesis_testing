@@ -88,7 +88,7 @@ def find_mean(dataframes):
 
 def cal_z_stat_m(sample_mean, pop_mean, pop_sd, n):
     z_stat = (sample_mean-pop_mean)/(pop_sd/math.sqrt(n))
-    print(f"z stat = {z_stat:.4f}")
+    # print(f"z stat = {z_stat:.4f}")
     return z_stat
 
 
@@ -155,12 +155,14 @@ if __name__ == "__main__":
 
     # create train, validate, test dataframe
     train_df, validate_df, test_df = create_dataframe(sampling_path)
-    print(
-        f"# Number of record\nTraining Set = {len(train_df)}\nValidation Set = {len(validate_df)}\nTesting Set = {len(test_df)}")
-
+    # print(
+    #     f"# Number of record\nTraining Set = {len(train_df)}\nValidation Set = {len(validate_df)}\nTesting Set = {len(test_df)}")
+    # print(train_df.head(5))
+    # print(validate_df.head(5))
+    # print(test_df.head(5))
     """Assignment 1: Hypothesis is the proportions of 3 types of iris in all 3 dataset are the same at the significance level of 0.05"""
     # calculate proportion of each group
-    print()
+    # print()
     train_proportion = class_proportion(train_df)
     validate_proportion = class_proportion(validate_df)
     test_proportion = class_proportion(test_df)
@@ -175,23 +177,25 @@ if __name__ == "__main__":
     train_location = [proportion_df.iloc[0, 0],
                       proportion_df.iloc[1, 0],
                       proportion_df.iloc[2, 0]]
-    print()
     z_train_setosa, z_train_versicolor, z_train_virginica = cal_z_stat_train_p(
         train_location)
     # calculate validate z statistic
     validate_location = [proportion_df.iloc[0, 1],
                          proportion_df.iloc[1, 1],
                          proportion_df.iloc[2, 1]]
-    print()
     z_validate_setosa, z_validate_versicolor, z_validate_virginica = cal_z_stat_validate_p(
         validate_location)
     # calculate test z statistic
     test_location = [proportion_df.iloc[0, 2],
                      proportion_df.iloc[1, 2],
                      proportion_df.iloc[2, 2]]
-    print()
     z_test_setosa, z_test_versicolor, z_test_virginica = cal_z_stat_test_p(
         test_location)
+    print()
+    # print("# Testing set")
+    # print(f"z-setosa = {z_test_setosa:.4f}")
+    # print(f"z-versicolor = {z_test_versicolor:.4f}")
+    # print(f"z-virginica = {z_test_virginica:.4f}")
 
     # make decision
     train_decision = make_decision(
@@ -217,21 +221,19 @@ if __name__ == "__main__":
                   'PetalLength': 1.76, 'PetalWidth': 0.76}
     feature_sd_list = [val for val in feature_sd.values()]
     # calculate mean of each group
-    print()
     feature_names = column_names[:-1]
     train_mean, validate_mean, test_mean = find_mean(
         [train_df, validate_df, test_df])
     mean_df = pd.DataFrame(
         [train_mean, validate_mean, test_mean]).T
     mean_df.columns = group_names
-    print(mean_df)
+    # print(mean_df)
 
     # calculate train z statistic
     train_location_2 = [mean_df.iloc[0, 0],
                         mean_df.iloc[1, 0],
                         mean_df.iloc[2, 0],
                         mean_df.iloc[3, 0]]
-    print()
     z_train_sepal_length, z_train_sepal_width, z_train_petal_length, z_train_petal_width = cal_z_stat_train_m(
         train_location_2)
     # calculate validate z statistic
@@ -239,7 +241,6 @@ if __name__ == "__main__":
                            mean_df.iloc[1, 1],
                            mean_df.iloc[2, 1],
                            mean_df.iloc[3, 1]]
-    print()
     z_validate_sepal_length, z_validate_sepal_width, z_validate_petal_length, z_validate_petal_width = cal_z_stat_validate_m(
         validate_location_2)
     # calculate test z statistic
@@ -247,9 +248,14 @@ if __name__ == "__main__":
                        mean_df.iloc[1, 2],
                        mean_df.iloc[2, 2],
                        mean_df.iloc[3, 2]]
-    print()
     z_test_sepal_length, z_test_sepal_width, z_test_petal_length, z_test_petal_width = cal_z_stat_test_m(
         test_location_2)
+
+    # print("# Testing set")
+    # print(f"z-sepal-length = {z_test_sepal_length:.4f}")
+    # print(f"z-sepal-width = {z_test_sepal_width:.4f}")
+    # print(f"z-petal-length = {z_test_petal_length:.4f}")
+    # print(f"z-petal-width = {z_test_petal_width:.4f}")
 
     # make decision
     train_decision_2 = make_decision(
@@ -260,7 +266,7 @@ if __name__ == "__main__":
         [z_test_sepal_length, z_test_sepal_width, z_test_petal_length, z_test_petal_width], z_critical)
 
     # make conclusion
-    # print("\n# Assignment 1 Conclusion")
+    # print("\n# Assignment 2 Conclusion")
     asm2_conclusion = make_conclusion_2(
         [train_decision_2, validate_decision_2, test_decision_2])
-    print(asm2_conclusion)
+    # print(asm2_conclusion)
