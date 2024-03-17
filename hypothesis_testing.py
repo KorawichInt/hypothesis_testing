@@ -62,6 +62,16 @@ def cal_z_stat_test(location):
     return z_test_setosa, z_test_versicolor, z_test_virginica
 
 
+def decision(z_stat, z_critical):
+    if abs(z_stat[0]) < z_critical and abs(z_stat[1]) < z_critical and abs(z_stat[2]) < z_critical:
+        return f"Fail to reject null hypothesis (H0)"
+    else:
+        return f"Reject null hypothesis (H0)"
+
+
+# def conclusion(decisions):
+
+
 if __name__ == "__main__":
     data_path = r'assets\iris.data'
     data_path_csv = r'csv\iris.csv'
@@ -93,25 +103,37 @@ if __name__ == "__main__":
     # calculate train z statistic
     alpha = 0.05
     z_critical = 1.96
-    print("\n# Train z")
     train_location = [proportion_df.iloc[0, 0],
                       proportion_df.iloc[1, 0],
                       proportion_df.iloc[2, 0]]
+    print()
     z_train_setosa, z_train_versicolor, z_train_virginica = cal_z_stat_train(
         train_location)
     # calculate validate z statistic
-    print("\n# Validate z")
     validate_location = [proportion_df.iloc[0, 1],
                          proportion_df.iloc[1, 1],
                          proportion_df.iloc[2, 1]]
+    print()
     z_validate_setosa, z_validate_versicolor, z_validate_virginica = cal_z_stat_validate(
         validate_location)
     # calculate test z statistic
-    print("\n# Test z")
     test_location = [proportion_df.iloc[0, 2],
                      proportion_df.iloc[1, 2],
                      proportion_df.iloc[2, 2]]
+    print()
     z_test_setosa, z_test_versicolor, z_test_virginica = cal_z_stat_test(
         test_location)
 
     # decision and conclusion
+    print("\n# Training Set Decision")
+    train_decision = decision(
+        [z_train_setosa, z_train_versicolor, z_train_virginica], z_critical)
+    print(train_decision)
+    print("\n# Validation Set Decision")
+    validate_decision = decision(
+        [z_validate_setosa, z_validate_versicolor, z_validate_virginica], z_critical)
+    print(validate_decision)
+    print("\n# Testing Set Decision")
+    test_decision = decision(
+        [z_test_setosa, z_test_versicolor, z_test_virginica], z_critical)
+    print(test_decision)
