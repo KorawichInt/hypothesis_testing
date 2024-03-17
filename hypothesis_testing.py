@@ -31,34 +31,33 @@ def class_proportion(dataframe):
     return count_dict
 
 
-def cal_z_stat(p_sample, n):
+def cal_z_stat_p(p_sample, n):
     p0 = 1/3
     z_stat = (p_sample-p0)/math.sqrt((p0*(1-p0))/n)
-    print(f"z stat = {z_stat:.4f}")
     return z_stat
 
 
-def cal_z_stat_train(location):
+def cal_z_stat_train_p(location):
     n = len(train_df)
-    z_train_setosa = cal_z_stat(location[0], n)
-    z_train_versicolor = cal_z_stat(location[1], n)
-    z_train_virginica = cal_z_stat(location[2], n)
+    z_train_setosa = cal_z_stat_p(location[0], n)
+    z_train_versicolor = cal_z_stat_p(location[1], n)
+    z_train_virginica = cal_z_stat_p(location[2], n)
     return z_train_setosa, z_train_versicolor, z_train_virginica
 
 
-def cal_z_stat_validate(location):
+def cal_z_stat_validate_p(location):
     n = len(validate_df)
-    z_validate_setosa = cal_z_stat(location[0], n)
-    z_validate_versicolor = cal_z_stat(location[1], n)
-    z_validate_virginica = cal_z_stat(location[2], n)
+    z_validate_setosa = cal_z_stat_p(location[0], n)
+    z_validate_versicolor = cal_z_stat_p(location[1], n)
+    z_validate_virginica = cal_z_stat_p(location[2], n)
     return z_validate_setosa, z_validate_versicolor, z_validate_virginica
 
 
-def cal_z_stat_test(location):
+def cal_z_stat_test_p(location):
     n = len(test_df)
-    z_test_setosa = cal_z_stat(location[0], n)
-    z_test_versicolor = cal_z_stat(location[1], n)
-    z_test_virginica = cal_z_stat(location[2], n)
+    z_test_setosa = cal_z_stat_p(location[0], n)
+    z_test_versicolor = cal_z_stat_p(location[1], n)
+    z_test_virginica = cal_z_stat_p(location[2], n)
     return z_test_setosa, z_test_versicolor, z_test_virginica
 
 
@@ -71,11 +70,65 @@ def make_decision(z_stat, z_critical):
 
 def make_conclusion(decisions):
     if (decisions[0][:4] == "Fail") and (decisions[1][:4] == "Fail") and (decisions[2][:4] == "Fail"):
-        print(f"Since Training Set Decision and Validation Set Decision and Testing Set Decision are Fail to reject null hypothesis (H0)\
-              \nSo there is sufficient evidence to conclude that the proportions of 3 types of iris in all 3 dataset are the same at the significance level of 0.05")
+        return f"Since, Training Set Decision and Validation Set Decision and Testing Set Decision are Fail to reject null hypothesis (H0)\
+              \nSo, there is sufficient evidence to conclude that the proportions of 3 types of iris in all 3 dataset are the same at the significance level of 0.05"
     else:
-        print(f"Since Training Set Decision and Validation Set Decision and Testing Set Decision are not Fail to reject null hypothesis (H0)\
-              \nThere is insufficient evidence to conclude that the proportions of 3 types of iris in all 3 dataset are the same at the significance level of 0.05")
+        return f"Since, Training Set Decision and Validation Set Decision and Testing Set Decision are not Fail to reject null hypothesis (H0)\
+              \nSo, there is insufficient evidence to conclude that the proportions of 3 types of iris in all 3 dataset are the same at the significance level of 0.05"
+
+
+def find_mean(dataframes):
+    feature_means_list = []
+    for df in dataframes:
+        df_mean = df[feature_names].mean()
+        mean_dict = df_mean.to_dict()
+        feature_means_list.append(mean_dict)
+    return feature_means_list
+
+
+def cal_z_stat_m(sample_mean, pop_mean, pop_sd, n):
+    z_stat = (sample_mean-pop_mean)/(pop_sd/math.sqrt(n))
+    print(f"z stat = {z_stat:.4f}")
+    return z_stat
+
+
+def cal_z_stat_train_m(location):
+    n = len(train_df)
+    z_train_sepal_length = cal_z_stat_m(
+        location[0], feature_mean_list[0], feature_sd_list[0], n)
+    z_train_sepal_width = cal_z_stat_m(
+        location[1], feature_mean_list[1], feature_sd_list[1], n)
+    z_train_petal_length = cal_z_stat_m(
+        location[2], feature_mean_list[2], feature_sd_list[2], n)
+    z_train_petal_width = cal_z_stat_m(
+        location[3], feature_mean_list[3], feature_sd_list[3], n)
+    return z_train_sepal_length, z_train_sepal_width, z_train_petal_length, z_train_petal_width
+
+
+def cal_z_stat_validate_m(location):
+    n = len(validate_df)
+    z_validate_sepal_length = cal_z_stat_m(
+        location[0], feature_mean_list[0], feature_sd_list[0], n)
+    z_validate_sepal_width = cal_z_stat_m(
+        location[1], feature_mean_list[1], feature_sd_list[1], n)
+    z_validate_petal_length = cal_z_stat_m(
+        location[2], feature_mean_list[2], feature_sd_list[2], n)
+    z_validate_petal_width = cal_z_stat_m(
+        location[3], feature_mean_list[3], feature_sd_list[3], n)
+    return z_validate_sepal_length, z_validate_sepal_width, z_validate_petal_length, z_validate_petal_width
+
+
+def cal_z_stat_test_m(location):
+    n = len(test_df)
+    z_test_sepal_length = cal_z_stat_m(
+        location[0], feature_mean_list[0], feature_sd_list[0], n)
+    z_test_sepal_width = cal_z_stat_m(
+        location[1], feature_mean_list[1], feature_sd_list[1], n)
+    z_test_petal_length = cal_z_stat_m(
+        location[2], feature_mean_list[2], feature_sd_list[2], n)
+    z_test_petal_width = cal_z_stat_m(
+        location[3], feature_mean_list[3], feature_sd_list[3], n)
+    return z_test_sepal_length, z_test_sepal_width, z_test_petal_length, z_test_petal_width
 
 
 if __name__ == "__main__":
@@ -93,9 +146,10 @@ if __name__ == "__main__":
 
     # create train, validate, test dataframe
     train_df, validate_df, test_df = create_dataframe(sampling_path)
-    # print(
-    #     f"# Number of record\nTraining Set = {len(train_df)}\nValidation Set = {len(validate_df)}\nTesting Set = {len(test_df)}")
+    print(
+        f"# Number of record\nTraining Set = {len(train_df)}\nValidation Set = {len(validate_df)}\nTesting Set = {len(test_df)}")
 
+    """Assignment 1: Hypothesis is the proportions of 3 types of iris in all 3 dataset are the same at the significance level of 0.05"""
     # calculate proportion of each group
     print()
     train_proportion = class_proportion(train_df)
@@ -104,7 +158,7 @@ if __name__ == "__main__":
     proportion_df = pd.DataFrame(
         [train_proportion, validate_proportion, test_proportion]).T
     proportion_df.columns = group_names
-    print(proportion_df)
+    # print(proportion_df)
 
     # calculate train z statistic
     alpha = 0.05
@@ -113,38 +167,77 @@ if __name__ == "__main__":
                       proportion_df.iloc[1, 0],
                       proportion_df.iloc[2, 0]]
     print()
-    z_train_setosa, z_train_versicolor, z_train_virginica = cal_z_stat_train(
+    z_train_setosa, z_train_versicolor, z_train_virginica = cal_z_stat_train_p(
         train_location)
     # calculate validate z statistic
     validate_location = [proportion_df.iloc[0, 1],
                          proportion_df.iloc[1, 1],
                          proportion_df.iloc[2, 1]]
     print()
-    z_validate_setosa, z_validate_versicolor, z_validate_virginica = cal_z_stat_validate(
+    z_validate_setosa, z_validate_versicolor, z_validate_virginica = cal_z_stat_validate_p(
         validate_location)
     # calculate test z statistic
     test_location = [proportion_df.iloc[0, 2],
                      proportion_df.iloc[1, 2],
                      proportion_df.iloc[2, 2]]
     print()
-    z_test_setosa, z_test_versicolor, z_test_virginica = cal_z_stat_test(
+    z_test_setosa, z_test_versicolor, z_test_virginica = cal_z_stat_test_p(
         test_location)
 
     # make decision
-    print("\n# Training Set Decision")
     train_decision = make_decision(
         [z_train_setosa, z_train_versicolor, z_train_virginica], z_critical)
-    print(train_decision)
-    print("\n# Validation Set Decision")
     validate_decision = make_decision(
         [z_validate_setosa, z_validate_versicolor, z_validate_virginica], z_critical)
-    print(validate_decision)
-    print("\n# Testing Set Decision")
     test_decision = make_decision(
         [z_test_setosa, z_test_versicolor, z_test_virginica], z_critical)
-    print(test_decision)
 
     # make conclusion
-    print("\n# Assignment 1 Conclusion")
+    # print("\n# Assignment 1 Conclusion")
     asm1_conclusion = make_conclusion(
         [train_decision, validate_decision, test_decision])
+    # print(asm1_conclusion)
+    #
+    # ***********************************************************
+    #
+    """Assignment 2: Hypothesis is the means of 4 features of iris in all 3 dataset are the same at the significance level of 0.05"""
+    feature_mean = {'SepalLength': 5.84, 'SepalWidth': 3.05,
+                    'PetalLength': 3.76, 'PetalWidth': 1.20}
+    feature_mean_list = [val for val in feature_mean.values()]
+    feature_sd = {'SepalLength': 0.83, 'SepalWidth': 0.43,
+                  'PetalLength': 1.76, 'PetalWidth': 0.76}
+    feature_sd_list = [val for val in feature_sd.values()]
+    # calculate mean of each group
+    print()
+    feature_names = column_names[:-1]
+    train_mean, validate_mean, test_mean = find_mean(
+        [train_df, validate_df, test_df])
+    mean_df = pd.DataFrame(
+        [train_mean, validate_mean, test_mean]).T
+    mean_df.columns = group_names
+    print(mean_df)
+
+    # calculate train z statistic
+    train_location_2 = [mean_df.iloc[0, 0],
+                        mean_df.iloc[1, 0],
+                        mean_df.iloc[2, 0],
+                        mean_df.iloc[3, 0]]
+    print()
+    z_train_sepal_length, z_train_sepal_width, z_train_petal_length, z_train_petal_width = cal_z_stat_train_m(
+        train_location_2)
+    # calculate validate z statistic
+    validate_location_2 = [mean_df.iloc[0, 1],
+                           mean_df.iloc[1, 1],
+                           mean_df.iloc[2, 1],
+                           mean_df.iloc[3, 1]]
+    print()
+    z_validate_sepal_length, z_validate_sepal_width, z_validate_petal_length, z_validate_petal_width = cal_z_stat_validate_m(
+        validate_location_2)
+    # calculate test z statistic
+    test_location_2 = [mean_df.iloc[0, 2],
+                       mean_df.iloc[1, 2],
+                       mean_df.iloc[2, 2],
+                       mean_df.iloc[3, 2]]
+    print()
+    z_test_sepal_length, z_test_sepal_width, z_test_petal_length, z_test_petal_width = cal_z_stat_test_m(
+        test_location_2)
