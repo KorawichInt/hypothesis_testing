@@ -68,7 +68,7 @@ def make_decision(z_stat, z_critical):
         return f"Reject null hypothesis (H0)"
 
 
-def make_conclusion(decisions):
+def make_conclusion_1(decisions):
     if (decisions[0][:4] == "Fail") and (decisions[1][:4] == "Fail") and (decisions[2][:4] == "Fail"):
         return f"Since, Training Set Decision and Validation Set Decision and Testing Set Decision are Fail to reject null hypothesis (H0)\
               \nSo, there is sufficient evidence to conclude that the proportions of 3 types of iris in all 3 dataset are the same at the significance level of 0.05"
@@ -129,6 +129,15 @@ def cal_z_stat_test_m(location):
     z_test_petal_width = cal_z_stat_m(
         location[3], feature_mean_list[3], feature_sd_list[3], n)
     return z_test_sepal_length, z_test_sepal_width, z_test_petal_length, z_test_petal_width
+
+
+def make_conclusion_2(decisions):
+    if (decisions[0][:4] == "Fail") and (decisions[1][:4] == "Fail") and (decisions[2][:4] == "Fail"):
+        return f"Since, Training Set Decision and Validation Set Decision and Testing Set Decision are Fail to reject null hypothesis (H0)\
+              \nSo, there is sufficient evidence to conclude that the means of 4 features of iris in all 3 dataset are the same at the significance level of 0.05"
+    else:
+        return f"Since, Training Set Decision and Validation Set Decision and Testing Set Decision are not Fail to reject null hypothesis (H0)\
+              \nSo, there is insufficient evidence to conclude that the means of 4 features of iris in all 3 dataset are the same at the significance level of 0.05"
 
 
 if __name__ == "__main__":
@@ -194,7 +203,7 @@ if __name__ == "__main__":
 
     # make conclusion
     # print("\n# Assignment 1 Conclusion")
-    asm1_conclusion = make_conclusion(
+    asm1_conclusion = make_conclusion_1(
         [train_decision, validate_decision, test_decision])
     # print(asm1_conclusion)
     #
@@ -241,3 +250,17 @@ if __name__ == "__main__":
     print()
     z_test_sepal_length, z_test_sepal_width, z_test_petal_length, z_test_petal_width = cal_z_stat_test_m(
         test_location_2)
+
+    # make decision
+    train_decision_2 = make_decision(
+        [z_train_sepal_length, z_train_sepal_width, z_train_petal_length, z_train_petal_width], z_critical)
+    validate_decision_2 = make_decision(
+        [z_validate_sepal_length, z_validate_sepal_width, z_validate_petal_length, z_validate_petal_width], z_critical)
+    test_decision_2 = make_decision(
+        [z_test_sepal_length, z_test_sepal_width, z_test_petal_length, z_test_petal_width], z_critical)
+
+    # make conclusion
+    # print("\n# Assignment 1 Conclusion")
+    asm2_conclusion = make_conclusion_2(
+        [train_decision_2, validate_decision_2, test_decision_2])
+    print(asm2_conclusion)
