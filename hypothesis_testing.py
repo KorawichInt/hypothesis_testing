@@ -62,14 +62,20 @@ def cal_z_stat_test(location):
     return z_test_setosa, z_test_versicolor, z_test_virginica
 
 
-def decision(z_stat, z_critical):
+def make_decision(z_stat, z_critical):
     if abs(z_stat[0]) < z_critical and abs(z_stat[1]) < z_critical and abs(z_stat[2]) < z_critical:
         return f"Fail to reject null hypothesis (H0)"
     else:
         return f"Reject null hypothesis (H0)"
 
 
-# def conclusion(decisions):
+def make_conclusion(decisions):
+    if (decisions[0][:4] == "Fail") and (decisions[1][:4] == "Fail") and (decisions[2][:4] == "Fail"):
+        print(f"Since Training Set Decision and Validation Set Decision and Testing Set Decision are Fail to reject null hypothesis (H0)\
+              \nSo there is sufficient evidence to conclude that the proportions of 3 types of iris in all 3 dataset are the same at the significance level of 0.05")
+    else:
+        print(f"Since Training Set Decision and Validation Set Decision and Testing Set Decision are not Fail to reject null hypothesis (H0)\
+              \nThere is insufficient evidence to conclude that the proportions of 3 types of iris in all 3 dataset are the same at the significance level of 0.05")
 
 
 if __name__ == "__main__":
@@ -124,16 +130,21 @@ if __name__ == "__main__":
     z_test_setosa, z_test_versicolor, z_test_virginica = cal_z_stat_test(
         test_location)
 
-    # decision and conclusion
+    # make decision
     print("\n# Training Set Decision")
-    train_decision = decision(
+    train_decision = make_decision(
         [z_train_setosa, z_train_versicolor, z_train_virginica], z_critical)
     print(train_decision)
     print("\n# Validation Set Decision")
-    validate_decision = decision(
+    validate_decision = make_decision(
         [z_validate_setosa, z_validate_versicolor, z_validate_virginica], z_critical)
     print(validate_decision)
     print("\n# Testing Set Decision")
-    test_decision = decision(
+    test_decision = make_decision(
         [z_test_setosa, z_test_versicolor, z_test_virginica], z_critical)
     print(test_decision)
+
+    # make conclusion
+    print("\n# Assignment 1 Conclusion")
+    asm1_conclusion = make_conclusion(
+        [train_decision, validate_decision, test_decision])
