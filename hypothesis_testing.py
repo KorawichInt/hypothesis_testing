@@ -1,4 +1,6 @@
 import pandas as pd
+import os
+import math
 
 
 def sampling_data(read_path, write_path):
@@ -29,6 +31,21 @@ def class_proportion(dataframe):
     return count_dict
 
 
+def cal_z_stat(p_sample, n):
+    p0 = 1/3
+    z_stat = (p_sample-p0)/math.sqrt((p0*(1-p0))/n)
+    print(f"z stat = {z_stat:.4f}")
+    return z_stat
+
+
+def cal_z_stat_train(location):
+    n = len(train_df)
+    z_train_setosa = cal_z_stat(location[0], n)
+    z_train_versicolor = cal_z_stat(location[1], n)
+    z_train_virginica = cal_z_stat(location[2], n)
+    return z_train_setosa, z_train_versicolor, z_train_virginica
+
+
 if __name__ == "__main__":
     data_path = r'assets\iris.data'
     data_path_csv = r'csv\iris.csv'
@@ -39,7 +56,8 @@ if __name__ == "__main__":
     group_names = ['Training_set', 'Validation_set', 'Testing_set']
 
     # read, sampling, write train validate test csv
-    sampling_data(data_path, [data_path_csv, sampling_path])
+    if not (os.path.exists(sampling_path[0])):
+        sampling_data(data_path, [data_path_csv, sampling_path])
 
     # create train, validate, test dataframe
     train_df, validate_df, test_df = create_dataframe(sampling_path)
@@ -55,3 +73,14 @@ if __name__ == "__main__":
         [train_proportion, validate_proportion, test_proportion]).T
     proportion_df.columns = group_names
     print(proportion_df)
+
+    # z statistic test
+    alpha = 0.05
+    z_critical = 1.96
+    train_location = [proportion_df.iloc[0, 0],
+                      proportion_df.iloc[1, 0],
+                      proportion_df.iloc[2, 0]]
+    z_train_setosa, z_train_versicolor, z_train_virginica = cal_z_stat_train(
+        train_location)
+
+    # decision and conclusion
