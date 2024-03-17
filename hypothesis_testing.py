@@ -2,8 +2,8 @@ import pandas as pd
 
 
 def sampling_data(read_path, write_path):
-    data = pd.read_csv(read_path, delimiter=',')
-    data.to_csv(write_path[0], index=False)
+    data = pd.read_csv(read_path, delimiter=',', header=None)
+    data.to_csv(write_path[0], index=False, header=None)
     data_shuffled = data.sample(frac=1, random_state=42).reset_index(drop=True)
     group_sizes = [80, 38, 32]
     train = data_shuffled[:group_sizes[0]]
@@ -14,9 +14,12 @@ def sampling_data(read_path, write_path):
     test.to_csv(write_path[1][2], index=False, header=False)
 
 
+# def class_proportion(data):
+
+
 if __name__ == "__main__":
     data_path = r'assets\iris.data'
     data_path_csv = r'csv\iris.csv'
     sampling_path = [r'csv\train.csv', r'csv\validate.csv', r'csv\test.csv']
-
+    # read, sampling, write train validate test csv
     sampling_data(data_path, [data_path_csv, sampling_path])
